@@ -1,4 +1,4 @@
-package com.kyn.gateway;
+package com.wittgroup.kyn.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
