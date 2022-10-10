@@ -17,9 +17,19 @@ ext {
 }
 
 dependencies {
+	//Actuator
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	//Eureka-Client
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	//Gateway
 	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+
+	//Authentication
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
