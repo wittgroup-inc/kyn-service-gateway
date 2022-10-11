@@ -17,5 +17,22 @@ spring:
           uri: lb://profile-management
           predicates:
             - Path=/api/users/**
+        - id: file-management
+          uri: lb://file-management
+          predicates:
+            - Path=/api/files/**
+      default-filters: TokenRelay
 
-
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/realms/microservices-realm
+        registration:
+          spring-cloud-gateway-client:
+            client-id: spring-cloud-gateway-client
+            client-secret: pcWuascH3wRiVGcxezuT6DK37inkfdzu
+            provider: keycloak
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/spring-cloud-gateway-client
