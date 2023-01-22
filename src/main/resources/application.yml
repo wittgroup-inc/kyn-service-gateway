@@ -16,23 +16,37 @@ spring:
         - id: profile-management
           uri: lb://profile-management
           predicates:
-            - Path=/api/users/**
+            - Path=/api/profiles/**
         - id: file-management
           uri: lb://file-management
           predicates:
             - Path=/api/files/**
+        - id: authorization-server
+          uri: lb://authorization-server
+          predicates:
+            - Path=/api/users/**
       default-filters: TokenRelay
 
   security:
     oauth2:
       client:
-        provider:
-          keycloak:
-            issuer-uri: http://localhost:8180/realms/microservices-realm
         registration:
-          spring-cloud-gateway-client:
-            client-id: spring-cloud-gateway-client
-            client-secret: pcWuascH3wRiVGcxezuT6DK37inkfdzu
-            provider: keycloak
+          kyn-cloud-gateway-client:
+            provider: spring
+            client-id: kyn-cloud-gateway
+            client-secret: 1232kyn123
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/spring-cloud-gateway-client
+            redirect-uri: "http://localhost:8080/login/oauth2/code/32432f432"
+            scope: openid
+            client-name: kyn-cloud-gateway-client
+          kyn-cloud-gateway-client-code:
+            provider: spring
+            client-id: kyn-cloud-gateway
+            client-secret: 1232kyn123
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8080/authorized"
+            scope: read
+            client-name: kyn-cloud-gateway-client-code
+        provider:
+              spring:
+                issuer-uri: http://auth-server:8085

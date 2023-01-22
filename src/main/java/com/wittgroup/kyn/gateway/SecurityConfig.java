@@ -12,9 +12,12 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
-        serverHttpSecurity.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated()).oauth2Login(Customizer.withDefaults());
+        serverHttpSecurity.authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
+                        .anyExchange().authenticated())
+                .csrf(Customizer.withDefaults())
+                .oauth2Login(Customizer.withDefaults());
         serverHttpSecurity.csrf().disable();
         return serverHttpSecurity.build();
-
     }
 }
