@@ -3,6 +3,8 @@ server:
 eureka:
   instance:
     hostname: localhost
+
+
 spring:
   application:
     name: kyn-service-gateway
@@ -27,26 +29,35 @@ spring:
             - Path=/api/users/**
       default-filters: TokenRelay
 
+  thymeleaf:
+    cache: false
   security:
     oauth2:
       client:
         registration:
-          kyn-cloud-gateway-client:
+          kyn-cloud-gateway-client-oidc:
             provider: spring
             client-id: kyn-cloud-gateway
             client-secret: 1232kyn123
             authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8080/login/oauth2/code/32432f432"
-            scope: openid
-            client-name: kyn-cloud-gateway-client
-          kyn-cloud-gateway-client-code:
+            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            client-name: kyn-cloud-gateway-client-oidc
+          kyn-cloud-gateway-client-authorization-code:
             provider: spring
             client-id: kyn-cloud-gateway
             client-secret: 1232kyn123
             authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8080/authorized"
-            scope: read
-            client-name: kyn-cloud-gateway-client-code
+            redirect-uri: "http://127.0.0.1:8080/authorized"
+            scope: kyn.read,kyn.write
+            client-name: kyn-cloud-gateway-client-authorization-code
+          kyn-cloud-gateway-client-client-credentials:
+            provider: spring
+            client-id: kyn-cloud-gateway
+            client-secret: 1232kyn123
+            authorization-grant-type: client_credentials
+            scope: kyn.read,kyn.write
+            client-name: kyn-cloud-gateway-client-client-credentials
         provider:
-              spring:
-                issuer-uri: http://auth-server:8085
+          spring:
+            issuer-uri: http://localhost:8085

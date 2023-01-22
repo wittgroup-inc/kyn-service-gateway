@@ -1,3 +1,4 @@
+/*
 package com.wittgroup.kyn.gateway;
 
 import org.springframework.context.annotation.Bean;
@@ -21,3 +22,4 @@ public class SecurityConfig {
         return serverHttpSecurity.build();
     }
 }
+*/
