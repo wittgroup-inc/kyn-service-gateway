@@ -1,6 +1,0 @@
-#FileLock
-#Tue Oct 11 22:20:12 IST 2022
-server=192.168.0.2\:53997
-hostName=192.168.0.2
-method=file
-id=183c7f42fd119aeaf965fa73ae86a66da3ec8813423
