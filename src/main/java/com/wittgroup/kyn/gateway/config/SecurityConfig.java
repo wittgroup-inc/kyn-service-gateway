@@ -32,23 +32,35 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig {
 
-	@Bean
-	WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/webjars/**");
-	}
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/webjars/**");
+    }
 
-	// @formatter:off
-	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			.authorizeHttpRequests(authorize ->
-				authorize.anyRequest().authenticated()
-			)
-			.oauth2Login(oauth2Login ->
-				oauth2Login.loginPage("/oauth2/authorization/kyn-cloud-gateway-client-oidc"))
-			.oauth2Client(withDefaults());
-		return http.build();
-	}
-	// @formatter:on
+
+//    @Bean
+//    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
+//        serverHttpSecurity.authorizeExchange(exchanges -> exchanges
+//                        .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
+//                        .anyExchange().authenticated())
+//                .csrf(Customizer.withDefaults())
+//                .oauth2Login(Customizer.withDefaults());
+//        serverHttpSecurity.csrf().disable();
+//        return serverHttpSecurity.build();
+//    }
+
+    // @formatter:off
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests()
+                .requestMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
+                .anyRequest().authenticated().and()
+                .oauth2Login(oauth2Login ->
+                        oauth2Login.loginPage("/oauth2/authorization/kyn-cloud-gateway-client-oidc"))
+                .oauth2Client(withDefaults());
+        return http.build();
+    }
+    // @formatter:on
 
 }
