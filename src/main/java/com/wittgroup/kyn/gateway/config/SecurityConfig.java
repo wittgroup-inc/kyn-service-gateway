@@ -15,12 +15,23 @@
  */
 package com.wittgroup.kyn.gateway.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.server.DefaultServerOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.server.ServerOAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
+import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -28,39 +39,18 @@ import static org.springframework.security.config.Customizer.withDefaults;
  * @author Joe Grandja
  * @since 0.0.1
  */
-@EnableWebSecurity
+@EnableWebFluxSecurity
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig {
 
     @Bean
-    WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/webjars/**");
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
+        serverHttpSecurity.authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
+                        .anyExchange().authenticated())
+                .csrf(Customizer.withDefaults())
+                .oauth2Login(withDefaults());
+        serverHttpSecurity.csrf().disable();
+        return serverHttpSecurity.build();
     }
-
-
-//    @Bean
-//    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
-//        serverHttpSecurity.authorizeExchange(exchanges -> exchanges
-//                        .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
-//                        .anyExchange().authenticated())
-//                .csrf(Customizer.withDefaults())
-//                .oauth2Login(Customizer.withDefaults());
-//        serverHttpSecurity.csrf().disable();
-//        return serverHttpSecurity.build();
-//    }
-
-    // @formatter:off
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests()
-                .requestMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
-                .anyRequest().authenticated().and()
-                .oauth2Login(oauth2Login ->
-                        oauth2Login.loginPage("/oauth2/authorization/kyn-cloud-gateway-client-oidc"))
-                .oauth2Client(withDefaults());
-        return http.build();
-    }
-    // @formatter:on
-
 }
