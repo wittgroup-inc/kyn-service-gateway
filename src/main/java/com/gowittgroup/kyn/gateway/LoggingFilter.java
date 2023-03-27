@@ -1,4 +1,4 @@
-package com.wittgroup.kyn.gateway;
+package com.gowittgroup.kyn.gateway;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
