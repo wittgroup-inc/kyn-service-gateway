@@ -17,10 +17,14 @@ package com.gowittgroup.kyn.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import reactor.core.publisher.Mono;
+
+import java.net.URI;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -38,8 +42,14 @@ public class SecurityConfig {
                         .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
                         .anyExchange().authenticated())
                 .csrf(Customizer.withDefaults())
-                .oauth2Login(withDefaults());
+                .oauth2Login(withDefaults())
+                .exceptionHandling(handler -> handler
+                        .authenticationEntryPoint((exchange, e) -> Mono.fromRunnable(() -> {
+                            exchange.getResponse().setStatusCode(HttpStatus.FOUND);
+                            exchange.getResponse().getHeaders().setLocation(URI.create("/oauth2/authorization/kyn-cloud-gateway-client-oidc"));
+                        })));
         serverHttpSecurity.csrf().disable();
         return serverHttpSecurity.build();
     }
+
 }
