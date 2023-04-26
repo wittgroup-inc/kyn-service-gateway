@@ -40,6 +40,7 @@ public class AuthorizationController {
 
 	public AuthorizationController(WebClient webClient
 			) {
+        System.out.println("DEBUG_ISSUE: AuthorizationController:AuthorizationController(): webClient: "+webClient.toString());
 		this.webClient = webClient;
 	//	this.messagesBaseUri = messagesBaseUri;
 	}
@@ -48,6 +49,8 @@ public class AuthorizationController {
 	public String authorizationCodeGrant(Model model,
 			@RegisteredOAuth2AuthorizedClient("kyn-cloud-gateway-client-authorization-code")
 					OAuth2AuthorizedClient authorizedClient) {
+
+		System.out.println("DEBUG_ISSUE: AuthorizationController:authorizationCodeGrant(): authorizedClient: "+authorizedClient.toString());
 
 		String[] messages = this.webClient
 				.get()
@@ -63,6 +66,7 @@ public class AuthorizationController {
 	// '/authorized' is the registered 'redirect_uri' for authorization_code
 	@GetMapping(value = "/authorized", params = OAuth2ParameterNames.ERROR)
 	public String authorizationFailed(Model model, HttpServletRequest request) {
+		System.out.println("DEBUG_ISSUE: AuthorizationController:authorizationFailed(): request: "+request.toString());
 		String errorCode = request.getParameter(OAuth2ParameterNames.ERROR);
 		if (StringUtils.hasText(errorCode)) {
 			model.addAttribute("error",
@@ -78,7 +82,7 @@ public class AuthorizationController {
 
 	@GetMapping(value = "/authorize", params = "grant_type=client_credentials")
 	public String clientCredentialsGrant(Model model) {
-
+		System.out.println("DEBUG_ISSUE: AuthorizationController:clientCredentialsGrant(): model: "+model.toString());
 		String[] messages = this.webClient
 				.get()
 				//.uri(this.messagesBaseUri)

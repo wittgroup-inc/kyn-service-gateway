@@ -38,6 +38,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
+        System.out.println("DEBUG_ISSUE: SecurityConfig:springSecurityFilterChain(): serverHttpSecurity: "+serverHttpSecurity.toString());
         serverHttpSecurity.authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
                         .anyExchange().authenticated())

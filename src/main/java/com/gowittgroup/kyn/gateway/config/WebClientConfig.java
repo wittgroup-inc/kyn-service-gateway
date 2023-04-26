@@ -34,6 +34,7 @@ public class WebClientConfig {
 
     @Bean
     WebClient webClient(ReactiveOAuth2AuthorizedClientManager reactiveOAuth2AuthorizedClientManager) {
+        System.out.println("DEBUG_ISSUE: WebClientConfig:webClient(): authClientManager: "+reactiveOAuth2AuthorizedClientManager.toString());
         ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
                 new ServerOAuth2AuthorizedClientExchangeFilterFunction(reactiveOAuth2AuthorizedClientManager);
         return WebClient.builder()
@@ -46,6 +47,7 @@ public class WebClientConfig {
     ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
             ReactiveClientRegistrationRepository clientRegistrationRepository,
             ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
+        System.out.println("DEBUG_ISSUE: WebClientConfig:authorizedClientManager(): authRepo: "+authorizedClientRepository.toString()+", clientRepo: "+clientRegistrationRepository.toString());
         ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider =
                 ReactiveOAuth2AuthorizedClientProviderBuilder.builder()
                         .authorizationCode()
