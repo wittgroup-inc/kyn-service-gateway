@@ -29,8 +29,6 @@ spring:
             - Path=/api/users/**
       default-filters: TokenRelay
 
-  thymeleaf:
-    cache: false
   security:
     oauth2:
       client:
