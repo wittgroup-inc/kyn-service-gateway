@@ -17,40 +17,36 @@ package com.gowittgroup.kyn.gateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import reactor.core.publisher.Mono;
-
-import java.net.URI;
-
-import static org.springframework.security.config.Customizer.withDefaults;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 /**
  * @author Joe Grandja
  * @since 0.0.1
  */
-@EnableWebFluxSecurity
+
+@EnableWebFlux
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig {
-
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity serverHttpSecurity) {
-        System.out.println("DEBUG_ISSUE: SecurityConfig:springSecurityFilterChain(): serverHttpSecurity: "+serverHttpSecurity.toString());
-        serverHttpSecurity.authorizeExchange(exchanges -> exchanges
+        return serverHttpSecurity
+                .authorizeExchange(exchanges -> exchanges
+                        // Open paths for public access
                         .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
-                        .anyExchange().authenticated())
-                .csrf(Customizer.withDefaults())
-                .oauth2Login(withDefaults())
-                .exceptionHandling(handler -> handler
-                        .authenticationEntryPoint((exchange, e) -> Mono.fromRunnable(() -> {
-                            exchange.getResponse().setStatusCode(HttpStatus.FOUND);
-                            exchange.getResponse().getHeaders().setLocation(URI.create("/oauth2/authorization/kyn-cloud-gateway-client-oidc"));
-                        })));
-        serverHttpSecurity.csrf().disable();
-        return serverHttpSecurity.build();
+                        .pathMatchers("/login/oauth2/code/**",
+                                "/authorized"
+                        ).permitAll()
+                        // Allow favicon requests
+                        .pathMatchers("/favicon.ico").permitAll()
+                        // All other requests need authentication
+                        .anyExchange().authenticated()
+                )
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity
+                .oauth2Login(Customizer.withDefaults()) // Default OAuth2 login
+                .build();
     }
 
 }
