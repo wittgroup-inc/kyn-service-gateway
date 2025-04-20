@@ -1,4 +1,4 @@
-package com.wittgroup.kyn.gateway.web;
+package com.gowittgroup.kyn.gateway.web;
 
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
