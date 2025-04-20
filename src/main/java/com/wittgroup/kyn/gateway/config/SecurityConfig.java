@@ -37,7 +37,9 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         // Open paths for public access
                         .pathMatchers("/api/profiles/loadUser/**", "/api/profiles/createUser", "/api/users/signUp").permitAll()
-                        .pathMatchers("/login/oauth2/code/**", "/authorized").permitAll()
+                        .pathMatchers("/login/oauth2/code/**",
+                                "/authorized"
+                        ).permitAll()
                         // Allow favicon requests
                         .pathMatchers("/favicon.ico").permitAll()
                         // All other requests need authentication

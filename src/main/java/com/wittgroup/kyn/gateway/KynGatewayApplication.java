@@ -9,5 +9,4 @@ public class KynGatewayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(KynGatewayApplication.class, args);
 	}
-
 }
